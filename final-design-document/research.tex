@@ -166,7 +166,7 @@ our threshold. This is where the linear benchmarks come in.
 The linear benchmarks allow us to figure out what constraints we have to limit ourselves
 to in order to stay below our 5 second threshold. We based these benchmarks around factors
 we speculated would affect the performance the most. For each of these benchmark factors,
-we progressively test higher amounts and graph the results for easy analysis (See
+we progressively test higher amounts and graph the results for easy analysis (see
 \autoref{fig:magentaperf}).
 
 \paragraph{Linear benchmark factors}
@@ -303,8 +303,19 @@ followed an online guide to setup this MIDI gadget, which involves providing inf
 to the kernel about our device through the \url{/sys/kernel/config/usb_gadget/} folder
 \autocite{raspberryPiGadgetSetup}.
 
-This works, but we ran into a problem with our setup where our HDMI connection to the
-monitor was not working anymore. This connection is critical, as we need to be able to
+From here we can use the \url{aplaymidi} command to test our MIDI device, which sends a
+MIDI file to the host computer \autocite{gadgetTesting}. If the gadget is working
+properly, then the MIDI sequences should be visible in any application that listens for
+MIDI note events, such as a DAW.
+
+USB Gadgets appear as USB ethernet devices and can be read and written to like any other
+networking interface. USB MIDI gadgets similarly communicate through standard networking
+interfaces under Linux, meaning that our backend program for sending MIDI events to the
+host computer will be sending messages through networking interfaces. However, we will
+most likely use a library to abstract away this networking aspect.
+
+USB gadgets work, but we ran into a problem with our setup where our HDMI connection to
+the monitor was not working anymore. This connection is critical, as we need to be able to
 display our DAW to the built in connection using HDMI, so we had to find a workaround for
 this issue. We found out that there are \url{/boot/config.txt} options that can added to
 force an HDMI connection, using the \url{hdmi_force_hotplug} option
@@ -312,7 +323,7 @@ force an HDMI connection, using the \url{hdmi_force_hotplug} option
 be seen in listing \ref{lst:bootconfig}.
 
 We have also ran into some low voltage warnings when running the Raspberry Pi 4B as a USB
-gadget. These warnings are found in systemlogs and are viewed with \url{journalctl}. The
+gadget. These warnings are found in system logs and are viewed with \url{journalctl}. The
 Raspberry Pi 4b requires 5.1 volts and 3 amps to operate effectively, and will send the
 undervolt warning whenever it runs below 4.63 volts
 \autocite{raspberryPiAmps}. We notice that we see these warnings early in the boot, but it
